@@ -57,7 +57,7 @@ def login_view(request):
         return redirect('/usuarios/login')
 
 
-def sair(request):
+def logout(request):
     auth.logout(request)
     return redirect('/usuarios/login')
 
