@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+from medico.models import DadosMedico
+
+def home(request):
+    if request.method == "GET":
+        medicos = DadosMedico.objects.all()
+        return render(request, 'home.html', {'medicos': medicos})
