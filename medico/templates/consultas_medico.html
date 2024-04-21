@@ -9,25 +9,23 @@
     <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        /* medico */
+        /*Medico abrir_horario*/
         .foto-perfil{
 
             width: 150px;
             height: 150px;
             border-radius: 75px;
+        
         }
-
-        /* cadastro médico*/
+        /*Médico cadastro_medico*/
         .shadow-main-color{
             box-shadow: 1px 1px 5px 1px rgba(0, 204, 190,.4);
         }
-
-        /* Usuário*/
+        /*usuarios*/
         .bg-main{
             background-color: var(--main-color);
             height: 100vh;
         }
-        
         
         .cont-cadastro{
             width: 60%;
@@ -41,7 +39,6 @@
             font-size: 30px;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
         
         .fonte-destaque1{
             color: var(--dark-color)
@@ -66,8 +63,7 @@
             color: white;
             border: 1px solid var(--dark-color);
         }
-
-        /* paciente home*/
+        /*pacientes home*/
         .especialidades{
             font-size: 20px;
         }
@@ -155,7 +151,6 @@
             color: black;
         }
         
-        
         .link:hover{
             text-decoration: none;
         } 
@@ -183,9 +178,16 @@
 
 {% include "partials/navbar.html" %}
 
-
     <div class="container">
         <br>
+        {% if messages %}
+            <br>
+            {% for message in messages %}
+                <section class="alert {{message.tags}}">
+                    {{message}}
+                </section>
+            {% endfor %}
+        {% endif %}
         <h2><span class="color-dark">Suas consultas</span></h2>
 
         <div class="row">
@@ -203,20 +205,47 @@
         </div>
 
         <br>
-
+        
+        <h2><span class="color-dark">Hoje</span></h2>
         <div class="list-minhas-consultas">
             <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">Médico</th>
+                    <th scope="col">Paciente</th>
                     <th scope="col">Status</th>
                     <th scope="col">Data</th>
                   </tr>
                 </thead>
                 <tbody>
-                    {% for consulta in minhas_consultas  %}
+                    {% for consulta in consultas_hoje  %}
                         <tr>
-                            <td><a href="#">Dr(a).{{consulta.data_aberta.user}} Nome</a></td>
+                            <td><a href="">{{consulta.paciente}}</a></td>
+                            <td>{{consulta.get_status_display}}</td>
+                            <td>{{consulta.data_aberta.data}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+
+        </div>
+
+        <hr>
+        
+
+        <h2><span class="color-dark">Restantes</span></h2>
+        <div class="list-minhas-consultas">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Pacientes</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in consultas_restantes  %}
+                        <tr>
+                            <td><a href="">{{consulta.paciente}}</a></td>
                             <td>{{consulta.get_status_display}}</td>
                             <td>{{consulta.data_aberta.data}}</td>
                         </tr>

@@ -7,8 +7,9 @@ from django.contrib import messages
 
 from medico.models import Especialidades, DadosMedico, DatasAbertas
 from medico.utils import is_medico
+from paciente.models import Consulta
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @login_required
 def cadastro_medico(request):
@@ -19,7 +20,7 @@ def cadastro_medico(request):
 
     if request.method == "GET":
         especialidades = Especialidades.objects.all()
-        return render(request, 'cadastro_medico.html', {'especialidades': especialidades})
+        return render(request, 'cadastro_medico.html', {'especialidades': especialidades, 'is_medico': is_medico(request.user)})
     
     elif request.method == "POST":
         crm = request.POST.get('crm')
@@ -69,7 +70,7 @@ def abrir_horario(request):
     if request.method == "GET":
         dados_medicos = DadosMedico.objects.get(user=request.user)
         datas_abertas = DatasAbertas.objects.filter(user=request.user)
-        return render(request, 'abrir_horario.html', {'dados_medicos': dados_medicos, 'datas_abertas': datas_abertas})
+        return render(request, 'abrir_horario.html', {'dados_medicos': dados_medicos, 'datas_abertas': datas_abertas, 'is_medico': is_medico(request.user)})
     
     elif request.method == "POST":
         data = request.POST.get('data')
@@ -90,4 +91,18 @@ def abrir_horario(request):
 
         messages.add_message(request, constants.SUCCESS, 'Horário cadastrado com sucesso.')
         return redirect('/medicos/abrir_horario')
+    
+@login_required    
+def consultas_medico(request):
+    if not is_medico(request.user):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/sair')
+    
+    hoje = datetime.now().date()
+
+    consultas_hoje = Consulta.objects.filter(data_aberta__user=request.user).filter(data_aberta__data__gte=hoje).filter(data_aberta__data__lt=hoje + timedelta(days=1))
+    consultas_restantes = Consulta.objects.exclude(id__in=consultas_hoje.values('id'))
+
+    return render(request, 'consultas_medico.html', {'consultas_hoje': consultas_hoje, 'consultas_restantes': consultas_restantes, 'is_medico': is_medico(request.user)})
+
        
