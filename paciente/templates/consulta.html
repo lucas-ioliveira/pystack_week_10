@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+
+    {% comment %} <link rel="stylesheet" href="{% static 'medicos/css/abrir_horario.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/agendar_horario.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* medico */
+        .foto-perfil{
+
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+        }
+
+        /* cadastro médico*/
+        .shadow-main-color{
+            box-shadow: 1px 1px 5px 1px rgba(0, 204, 190,.4);
+        }
+
+        /* Usuário*/
+        .bg-main{
+            background-color: var(--main-color);
+            height: 100vh;
+        }
+        
+        
+        .cont-cadastro{
+            width: 60%;
+        }
+        
+        .cont-logo{
+            text-align: center;
+        }
+        
+        .text-logo{
+            font-size: 30px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        
+        .fonte-destaque1{
+            color: var(--dark-color)
+        }
+        
+        .btn-dark-color{
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        .btn-dark-color-outline{
+        
+            border: 1px solid var(--dark-color);
+            color: var(--dark-color)
+        
+        
+        }
+        
+        .btn-dark-color-outline:hover{
+        
+            background-color: var(--dark-color);
+            color: white;
+            border: 1px solid var(--dark-color);
+        }
+
+        /* paciente home*/
+        .especialidades{
+            font-size: 20px;
+        }
+        
+        .card-medicos{
+        
+            width: 60%;
+            background-color: #EAEAEA;
+            border: 1px solid var(--main-color);
+            padding: 20px;
+        
+        }
+        
+        .foto-perfil-card{
+            width: 90px;
+            height: 90px;
+            border-radius: 45px;
+        
+        }
+        
+        .foto-perfil-card-lg{
+            width: 180px;
+            height: 180px;
+            border-radius: 90px;
+        
+        }
+        .icon-main{
+            color: var(--main-color);
+        }
+        
+        .bg-main-lembrete{
+        
+            background-color: var(--dark-color);
+            padding: 10px;
+            color: white;
+        }
+        
+        .icon-differential{
+            color: var(--contrast-color);
+        }
+        
+        table {
+            border-collapse: collapse !important;
+            width: 100%;
+        }
+        
+        th, td {
+        
+            padding: 8px;
+            text-align: center;
+            background-color: #EAEAEA !important;
+        }
+        
+        th {
+            background-color: #EAEAEA;
+        }
+        
+        .link{
+            text-decoration: none;
+        }
+        
+        .today {
+            background-color: var(--dark-color);
+        }
+        
+        .selecionar-dia{
+            width: 100%;
+            background-color: #EAEAEA;
+            box-shadow: 1px 1px 10px gray;
+        }
+        
+        .header-dias{
+            background-color: var(--dark-color);
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .dia-semana{
+            float: right;
+        }
+        
+        .conteudo-data{
+            padding: 15px;
+            color: black;
+        }
+        
+        
+        .link:hover{
+            text-decoration: none;
+        } 
+        
+        .list-minhas-consultas{
+        
+            background-color: #EAEAEA;
+        
+            padding: 10px;
+        
+        }
+        
+        .documentos{
+            background-color: #cfcfcf;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    </style>
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+    {% include "partials/navbar.html" %}
+
+    <br><br>
+    <div class="container">
+        {% if consulta.status == 'C' %}
+            <div class="alert alert-danger" role="alert">
+                Consulta cancelada
+            </div>
+        {% elif consulta.status == 'F' %}
+            <div class="alert alert-success" role="alert">
+                Consulta Finalizada
+            </div>
+        {% elif consulta.status == 'I' %}
+            <div class="alert alert-primary" role="alert">
+                Consulta inicializada, acesse o link imediatamente!
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-3"><img src="{{dado_medico.foto.url}}" class="foto-perfil-card-lg" alt=""></div>
+                    <div class="col-md">
+                        <p style="font-size: 20px" class="p-bold">Dr(a). {{dado_medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></p>
+                        <p>{{dado_medico.descricao}}</p>
+                        <p class="p-bold">{{consulta.data_aberta.data}}</p>
+                    </div>
+                </div> 
+                <hr>
+                <br>
+                <div class="row">
+                    <div class="col-md">
+                        
+                        <p><i class="color-dark bi bi-check-circle-fill"></i> Consulta agendada</p>
+                    </div>
+                    <div class="col-md">
+                        <p><i class="{% if consulta.status == 'F' %}color-dark{% endif %} bi bi-check-circle-fill"></i> Consulta realizada</p>
+                    </div>
+                    <div class="col-md">
+                        <p><i class="bi bi-check-circle-fill"></i> Consulta Avaliada</p>
+                    </div>
+                </div>
+                <hr>
+                <h3 class="p-bold">Detalhes da consulta</h3>
+                <p style="font-size:20px"><i class="bi bi-calendar3 color-dark"></i>&nbsp {{consulta.data_aberta.data}}</p>
+                <p style="font-size:20px"><i class="bi bi-tag-fill color-dark"></i></i>&nbsp R$ {{dado_medico.valor_consulta}}</p>
+                <a style="cursor: auto;" class="btn btn-dark-color-outline btn-lg">Adicione em seu calendário!</a>
+                <hr>
+                <h3 class="p-bold">Como acessar ?</h3>
+                <p>No horário da consulta acesse o link disponível abaixo</p>
+
+                
+                {% if consulta.status == 'I' and consulta.link %}
+                    <a href="{{consulta.link}}"  class="btn btn-success btn-dark-color btn-lg" >Acessar consulta</a>
+                {% else %}
+                
+                    <a href="#"  class="btn btn-success btn-dark-color btn-lg disabled" >Acessar consulta</a>
+                
+                {% endif %}
+
+                
+                <hr>
+                <h3 class="p-bold">Meus documentos</h3>
+                <br>
+                {% for documento in documentos %}
+                    <a href="{{documento.documento.url}}" class="link documentos"><i class="bi bi-file-arrow-down"></i> {{documento.titulo}} - {{documento.consulta.data_aberta.data.year}}</a>
+                
+                {% endfor %}
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="col-md"></div>
+        </div>
+        
+    </div>
+
+{% endblock 'body' %}
