@@ -4,7 +4,7 @@ from django.contrib.messages import constants
 from datetime import datetime
 
 from medico.models import DadosMedico, Especialidades, DatasAbertas
-from paciente.models import Consulta
+from paciente.models import Consulta, Documento
 
 from medico.utils import is_medico
 
@@ -67,5 +67,6 @@ def consulta(request, id_consulta):
     if request.method == 'GET':
         consulta = Consulta.objects.get(id=id_consulta)
         dado_medico = DadosMedico.objects.get(user=consulta.data_aberta.user)
-        return render(request, 'consulta.html', {'consulta': consulta, 'dado_medico': dado_medico, 'is_medico': is_medico(request.user)})
+        documentos = Documento.objects.filter(consulta=consulta)
+        return render(request, 'consulta.html', {'consulta': consulta, 'dado_medico': dado_medico, 'is_medico': is_medico(request.user), 'documentos': documentos})
 
