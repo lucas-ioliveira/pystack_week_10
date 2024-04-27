@@ -36,8 +36,6 @@ def cadastro_medico(request):
         descricao = request.POST.get('descricao')
         valor_consulta = request.POST.get('valor_consulta')
 
-        #TODO: Validar todos os campos
-
         dados_medico = DadosMedico(
             crm=crm,
             nome=nome,
